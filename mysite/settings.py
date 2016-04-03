@@ -14,7 +14,9 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+############ Configuration#########
 
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'DATA_URL')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
@@ -38,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'myapp',
+    'csvimport.app.CSVImportConf',  # use AppConfig for django >=1.7 csvimport >=2.2
 ]
 
 MIDDLEWARE_CLASSES = [

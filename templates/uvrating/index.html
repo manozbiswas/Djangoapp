@@ -3,19 +3,23 @@
 {% block title %} Get the current rating of your university {% endblock %}
 
 {% block content %}
+
+
 <form class=" " role="search">
     {% csrf_token %}
     <div class="col-md-6">
         <div class="form-group">
             <label for="university-name">Select University</label>
             <select id="university-name" name="university-name" class="form-control">
-                <option>Dhaka University</option>
+                {% for u in uvlist %}
+                <option value="{{ u }}"> {{ u }}</option>
+                {% endfor %}
             </select>
         </div>
     </div>
     <div class="col-md-6">
         <div class="form-group">
-               <label for="university-name"></label>
+            <label for="university-name"></label>
             <button style="margin-top:25px;" type="submit" class="btn btn-primary btn-default">Submit</button>
         </div>
     </div>
