@@ -1,0 +1,11 @@
+<form class=" " role="search">
+    {% csrf_token %}
+    <div class="form-group">
+        <input type="text" class="form-control" placeholder="Search">
+        <label for="university-name">University name</label>
+        <select id="university-name" name="university-name">
+            <option>Dhaka University</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-default">Submit</button>
+</form>
