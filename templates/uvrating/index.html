@@ -4,13 +4,13 @@
 
 {% block content %}
 
-
-<form class=" " role="search">
+<form name="uvlist" class=" " role="search" action="/mysite/processdata" method="post">
     {% csrf_token %}
     <div class="col-md-6">
         <div class="form-group">
             <label for="university-name">Select University</label>
-            <select id="university-name" name="university-name" class="form-control">
+            <select id="university-name" name="universityName" class="form-control">
+                <option value="">Select</option>
                 {% for u in uvlist %}
                 <option value="{{ u }}"> {{ u }}</option>
                 {% endfor %}
