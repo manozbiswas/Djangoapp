@@ -137,6 +137,8 @@ def process_graph(university):
     # Save File
     plt.savefig('resources/images/university.png')
     plt.cla()
+    plt.clf()
+    plt.close()
 
 
     # return HttpResponse("image processed")
