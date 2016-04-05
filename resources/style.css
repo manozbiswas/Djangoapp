@@ -1,4 +1,17 @@
 body{
 background : #d8d8d8;
-color: red;
+color: #000;
+}
+section.content {
+    clear: both;
+    height: auto;
+    width: 100%;
+    overflow: hidden;
+    padding: 20px;
+}
+.footer{
+    margin-top: 46px;
+    padding: 40px 20px;
+    position: relative;
+    clear: both;
 }
