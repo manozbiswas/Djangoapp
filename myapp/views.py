@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.template import RequestContext, loader
+from django.core.urlresolvers import reverse
 from .models import Author, Data, Document
 import os
 from django.conf import settings
@@ -15,25 +16,25 @@ import matplotlib.pyplot as plt
 
 
 def index(request):
-    dir = os.path.dirname(__file__) ##H:\py\mysite\myapp project dir
-    dirr = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) ##Base dir H:\py\mysite
+    # dir = os.path.dirname(__file__) ##H:\py\mysite\myapp project dir
+    # dirr = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) ##Base dir H:\py\mysite
 
-    return render(request, 'uvrating/index.html', {'dir' : settings.STATIC_URL })
-
-
-def details(request):
-    authors = Author.objects.all()
-    template = loader.get_template('uvrating/index.html')
-    context = RequestContext(request, {
-        'authors': authors
-    })
-    return HttpResponse(template.render(context))
+    return render(request, 'uvrating/index.html')
 
 
-def authors(request):
-    authors = Author.objects.all()
-    context = {'authors': authors}
-    return render(request, 'uvrating/authors.html', context)
+# def details(request):
+#     authors = Author.objects.all()
+#     template = loader.get_template('uvrating/index.html')
+#     context = RequestContext(request, {
+#         'authors': authors
+#     })
+#     return HttpResponse(template.render(context))
+
+
+# def authors(request):
+#     authors = Author.objects.all()
+#     context = {'authors': authors}
+#     return render(request, 'uvrating/authors.html', context)
 
 
 def handle404(request):
@@ -62,20 +63,8 @@ def importdata(request):
 
 
 def show_university_list(request):
-    # timesData = Data.get_time_data(request)
-    # shanghaiData = Data.get_shanghai_data(request)
-    # cwurData = Data.get_cwur_data(request)
-    #
-    # all_university_names = set(timesData.university_name).union(set(shanghaiData.university_name)).union(
-    #     set(cwurData.institution))
-    #
-    # all_university_names_list = [str(i) for i in (list(all_university_names))]
-    #
-    # # getUvData = r''.join([ str(university) for university in sorted(all_university_names_list) ]).encode("utf-8")
-
-    context = {'uvlist': sorted(get_uv_list(request))}
-
-    return render(request, 'uvrating/index.html', context)
+    uvlist = {'uvlist': sorted(get_uv_list(request))}
+    return render(request, 'uvrating/index.html', uvlist)
 
 
 def get_uv_list(request):
@@ -101,6 +90,8 @@ def process_form_data(request):
 
             # imagepath ={'imagepath' : MEDIA_URL}
             return render(request, 'uvrating/form.html')
+            # HttpResponseRedirect('uvrating/form.html')
+            # HttpResponsePermanentRedirect(reverse('index'))
 
     return HttpResponse("bad request")
     # return render(request, 'uvrating/index.html', {'form': form})
@@ -152,7 +143,7 @@ def process_graph(university):
     ax.get_yaxis().tick_left()
 
     # Save File
-    plt.savefig('university.png')
+    plt.savefig('resources/images/university.png')
 
 
     # return HttpResponse("image processed")
