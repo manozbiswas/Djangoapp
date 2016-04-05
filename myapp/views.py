@@ -84,7 +84,7 @@ def process_form_data(request):
             university_name = [university]
             ### process_graph function is called
             process_graph(university_name)
-            return render(request, 'uvrating/index.html', {'formpopulated' : True , 'uvlist': sorted(get_uv_list())})
+            return render(request, 'uvrating/index.html', {'uv':university,'formpopulated' : True , 'uvlist': sorted(get_uv_list())})
     return render(request, 'uvrating/index.html', {'formpopulated' : False , 'uvlist': sorted(get_uv_list()),
                                                    'message' : 'Please select a university name'})
 

@@ -12,7 +12,11 @@
             <select id="university-name" name="universityName" class="form-control">
                 <option value="">Select University Name</option>
                 {% for u in uvlist %}
-                <option value="{{ u }}"> {{ u }}</option>
+                    {% if uv == u %}
+                       <option value="{{ u }}"  selected> {{ u }}</option>
+                    {% else %}
+                       <option value="{{ u }}"> {{ u }}</option>
+                    {% endif %}
                 {% endfor %}
             </select>
             <div style="color:red">{% firstof message message %}</div>
