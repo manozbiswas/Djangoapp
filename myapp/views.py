@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.template import RequestContext, loader
 from django.core.urlresolvers import reverse
-from .models import Author, Data, Document
+from .models import Author, Data
 import os
 from django.conf import settings
 # from seaborn import set
@@ -55,19 +55,17 @@ def importdata(request):
 
     all_university_names_list = [str(i) for i in (list(all_university_names))]
 
-    # getUvData = r''.join([ str(university) for university in sorted(all_university_names_list) ]).encode("utf-8")
-
     context = {'uvlist': sorted(all_university_names_list)}
 
     return render(request, 'uvrating/index.html', context)
 
 
 def show_university_list(request):
-    uvlist = {'uvlist': sorted(get_uv_list(request))}
+    uvlist = {'uvlist': sorted(get_uv_list())}
     return render(request, 'uvrating/index.html', uvlist)
 
 
-def get_uv_list(request):
+def get_uv_list():
     timesData = Data.get_time_data()
     shanghaiData = Data.get_shanghai_data()
     cwurData = Data.get_cwur_data()
@@ -81,22 +79,13 @@ def get_uv_list(request):
 
 def process_form_data(request):
     if request.method == 'POST':
-        # form = UvListForm(request.POST)
         if request.POST.get('universityName'):
             university = request.POST.get('universityName')
             university_name = [university]
+            ### process_graph function is called
             process_graph(university_name)
-            # return HttpResponse(university_name[0])
-
-            # # imagepath ={'imagepath' : MEDIA_URL}
-            # context = {'formpopulated' : True}
-            # uvlist = {'uvlist': sorted(get_uv_list(request))}
-            return render(request, 'uvrating/index.html', {'formpopulated' : True , 'uvlist': sorted(get_uv_list(request))})
-            # HttpResponseRedirect('uvrating/form.html')
-            # HttpResponsePermanentRedirect(reverse('index'))
-
-
-    return render(request, 'uvrating/index.html', {'formpopulated' : False , 'uvlist': sorted(get_uv_list(request)),
+            return render(request, 'uvrating/index.html', {'formpopulated' : True , 'uvlist': sorted(get_uv_list())})
+    return render(request, 'uvrating/index.html', {'formpopulated' : False , 'uvlist': sorted(get_uv_list()),
                                                    'message' : 'Please select a university name'})
 
 
@@ -147,6 +136,7 @@ def process_graph(university):
 
     # Save File
     plt.savefig('resources/images/university.png')
+    plt.cla()
 
 
     # return HttpResponse("image processed")
