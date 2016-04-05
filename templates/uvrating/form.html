@@ -26,8 +26,12 @@
 
 
 </form>
+{% load staticfiles %}
+    <!--<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}"/>-->
+<div class="col-md-12">
+   <img class="img-responsive" src="{% static 'university.png' %}" alt="My image"/>
+</div>
 
-<img src="{{ MEDIA_URL }}university.png" alt="My image"/>
 
 {% endblock %}
 

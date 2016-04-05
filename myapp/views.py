@@ -3,6 +3,7 @@ from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.template import RequestContext, loader
 from .models import Author, Data, Document
 import os
+from django.conf import settings
 # from seaborn import set
 # Import Packages
 import sys
@@ -17,7 +18,7 @@ def index(request):
     dir = os.path.dirname(__file__) ##H:\py\mysite\myapp project dir
     dirr = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) ##Base dir H:\py\mysite
 
-    return render(request, 'uvrating/index.html', {'dir' : dirr, 'dirr' : dir })
+    return render(request, 'uvrating/index.html', {'dir' : settings.STATIC_URL })
 
 
 def details(request):

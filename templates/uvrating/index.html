@@ -3,7 +3,7 @@
 {% block title %} Get the current rating of your university {% endblock %}
 
 {% block content %}
-{{ dirr }}
+{{ dir }}
 <form name="uvlist" class=" " role="search" action="/mysite/processdata" method="post">
     {% csrf_token %}
     <div class="col-md-6">
