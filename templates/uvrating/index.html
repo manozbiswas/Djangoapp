@@ -10,11 +10,12 @@
         <div class="form-group">
             <label for="university-name">Select University</label>
             <select id="university-name" name="universityName" class="form-control">
-                <option value="">Select</option>
+                <option value="">Select University Name</option>
                 {% for u in uvlist %}
                 <option value="{{ u }}"> {{ u }}</option>
                 {% endfor %}
             </select>
+            <div style="color:red">{% firstof message message %}</div>
         </div>
     </div>
     <div class="col-md-6">
@@ -26,6 +27,13 @@
 
 
 </form>
+{%if formpopulated %}
+{% load staticfiles %}
+    <!--<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}"/>-->
+<div class="col-md-12">
+   <img class="img-responsive" src="{% static 'images/university.png' %}" alt="My image"/>
+</div>
+{% endif %}
 {% endblock %}
 
 {% block footer %}

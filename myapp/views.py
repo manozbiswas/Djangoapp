@@ -88,13 +88,16 @@ def process_form_data(request):
             process_graph(university_name)
             # return HttpResponse(university_name[0])
 
-            # imagepath ={'imagepath' : MEDIA_URL}
-            return render(request, 'uvrating/form.html')
+            # # imagepath ={'imagepath' : MEDIA_URL}
+            # context = {'formpopulated' : True}
+            # uvlist = {'uvlist': sorted(get_uv_list(request))}
+            return render(request, 'uvrating/index.html', {'formpopulated' : True , 'uvlist': sorted(get_uv_list(request))})
             # HttpResponseRedirect('uvrating/form.html')
             # HttpResponsePermanentRedirect(reverse('index'))
 
-    return HttpResponse("bad request")
-    # return render(request, 'uvrating/index.html', {'form': form})
+
+    return render(request, 'uvrating/index.html', {'formpopulated' : False , 'uvlist': sorted(get_uv_list(request)),
+                                                   'message' : 'Please select a university name'})
 
 
 def process_graph(university):
