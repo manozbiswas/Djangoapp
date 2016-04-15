@@ -12,8 +12,11 @@ import sys
 import numpy as np  # linear algebra
 import pandas as pd  # data processing, CSV file I/O (e.g. pd.read_csv)
 import seaborn as sns
+import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.pylab as pylab
+import matplotlib.path as path
+import matplotlib.patches as patches
 
 
 def index(request):
@@ -138,9 +141,7 @@ def process_graph(university):
     plt.close()
 
 
-    # return HttpResponse("image processed")
-
-
+### Shows Top 10 university list####
 def show_top_uv(request):
     # uvlist = {'uvlist': sorted(get_uv_list())}
     # org_list = {'orglist':check_output(["ls", "resources/data"]).decode("utf8")}
@@ -163,16 +164,17 @@ def get_top_uv_form_data(request):
 
     if request.method == 'POST':
         if request.POST.get('rankingSystem') and request.POST.get('numberOfUv'):
-            if request.POST.get('rankingSystem') != '' and request.POST.get('numberOfUv') != '':
-                rankingSystem = request.POST.get('rankingSystem')
-                numberOfUv = request.POST.get('numberOfUv')
-                process_top_uv_graph(rankingSystem, numberOfUv)
-            return render(request, 'uvrating/topuv.html',
-                          {'listOfNumber': listOfNumber, 'formpopulated': True, 'rankingSystem': rankingSystem,
-                           'numberOfUv': numberOfUv, 'lists': rank_lists})
+            # if request.POST.get('rankingSystem') != '' and request.POST.get('numberOfUv') != '':
+            rankingSystem = request.POST.get('rankingSystem')
+            numberOfUv = request.POST.get('numberOfUv')
+            process_top_uv_graph(rankingSystem, numberOfUv)
         return render(request, 'uvrating/topuv.html',
-                      {'error': True, 'lists': rank_lists, 'listOfNumber': listOfNumber,})
-    return render(request, 'uvrating/topuv.html', {'formpopulated': False, 'error': True, 'lists': rank_lists})
+                      {'listOfNumber': listOfNumber, 'formpopulated': True, 'rankingSystem': rankingSystem,
+                       'numberOfUv': numberOfUv, 'lists': rank_lists})
+        # return render(request, 'uvrating/topuv.html',
+        #               {'error': True, 'lists': rank_lists, 'listOfNumber': listOfNumber,})
+    return render(request, 'uvrating/topuv.html',
+                  {'formpopulated': False, 'listOfNumber': listOfNumber, 'error': True, 'lists': rank_lists})
 
 
 def process_top_uv_graph(rankingSystem, numberOfUv):
@@ -215,3 +217,110 @@ def draw_graph(plot_data, rankingSystem, numberOfUv, hue):
     pylab.cla()
     pylab.clf()
     pylab.close()
+
+
+### Radar Chart ###
+
+def get_time_data_as_list():
+    timesData = Data.get_time_data()
+    all_university_names = set(timesData.university_name)
+    all_university_names_list = [str(i) for i in (list(all_university_names))]
+    # uvlist = {'uvlist': sorted(all_university_names_list)}
+    return sorted(all_university_names_list)
+
+
+def show_chart_form(request):
+    uvlist = {'uvlist': get_time_data_as_list()}
+    return render(request, 'uvrating/chart.html', uvlist)
+
+
+def show_chart(request):
+
+    if request.method == 'POST':
+        if request.POST.get('universityName'):
+            university = request.POST.get('universityName')
+            university_name = [university]
+
+            try:
+                make_chart(university)
+                return render(request, 'uvrating/chart.html',
+                              {'uv': university, 'formpopulated': True, 'uvlist': get_time_data_as_list()})
+            except IndexError:
+                return render(request, 'uvrating/chart.html',
+                              {'formpopulated': False, 'uvlist': get_time_data_as_list(),
+                               'error': 'There is some internal error for missing data, Please try later'})
+    return render(request, 'uvrating/chart.html',
+                  {'formpopulated': False, 'error': "There is some itenal error please try agian later",
+                   'uvlist': get_time_data_as_list()})
+
+
+def make_chart(university_name):
+    my_university_name = [university_name]
+
+    timesdata = Data.get_time_data()
+
+    properties = ['teaching', 'international', 'research', 'citations', 'income']
+
+    datarow = timesdata[timesdata.university_name.isin(my_university_name)].tail(1).reset_index(drop=True)
+    values = datarow[properties].astype(float).as_matrix().flatten()
+
+    title_text = '-'.join([my_university_name[0], str(datarow.year[0])])
+
+    # Choose some nice colors
+    matplotlib.rc('axes', facecolor='green')
+
+    # Make figure background the same colors as axes
+    fig = plt.figure(figsize=(10, 8), facecolor='white')
+    fig.suptitle(title_text, fontsize=14, fontweight='bold')
+
+    # Use a polar axes
+    axes = plt.subplot(111, polar=True)
+
+    # Set ticks to the number of properties (in radians)
+    t = np.arange(0, 2 * np.pi, 2 * np.pi / len(properties))
+    plt.xticks(t, [])
+
+    # Set yticks from 0 to 100
+    plt.yticks(np.linspace(0, 100, 11))
+
+    # Draw polygon representing values
+    points = [(x, y) for x, y in zip(t, values)]
+    points.append(points[0])
+    points = np.array(points)
+    codes = [path.Path.MOVETO, ] + \
+            [path.Path.LINETO, ] * (len(values) - 1) + \
+            [path.Path.CLOSEPOLY]
+    _path = path.Path(points, codes)
+    _patch = patches.PathPatch(_path, fill=True, color='blue', linewidth=0, alpha=.1)
+    axes.add_patch(_patch)
+    _patch = patches.PathPatch(_path, fill=False, linewidth=2)
+    axes.add_patch(_patch)
+
+    # Draw circles at value points
+    plt.scatter(points[:, 0], points[:, 1], linewidth=2,
+                s=50, color='red', edgecolor='black', zorder=10)
+
+    # Set axes limits
+    plt.ylim(0, 100)
+
+    # Draw ytick labels to make sure they fit properly
+    for i in range(len(properties)):
+        angle_rad = i / float(len(properties)) * 2 * np.pi
+        angle_deg = i / float(len(properties)) * 360
+        ha = "right"
+        if angle_rad < np.pi / 2 or angle_rad > 3 * np.pi / 2: ha = "left"
+        plt.text(angle_rad, 100.75, properties[i], size=14,
+                 horizontalalignment=ha, verticalalignment="center")
+
+        # A variant on label orientation
+        #    plt.text(angle_rad, 11, properties[i], size=14,
+        #             rotation=angle_deg-90,
+        #             horizontalalignment='center', verticalalignment="center")
+
+    # Done
+    plt.savefig('resources/images/radar-chart.png', facecolor='white')
+    fig.clf()
+    fig.clear()
+    plt.cla()
+    plt.clf()
+    plt.close()

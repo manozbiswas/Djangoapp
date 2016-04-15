@@ -10,6 +10,8 @@ urlpatterns = [
     url(r'^topuv', views.show_top_uv, name='Top university'),
     url(r'^processtopuvform', views.get_top_uv_form_data, name='Top university'),
     url(r'^processdata', views.process_form_data, name='Form'),
+    url(r'^showchart', views.show_chart, name='Chart'),
+    url(r'^uvreputation', views.show_chart_form, name='Chart form'),
     # url(r'^import', views.show_university_list, name='Import'),
     # ex: /polls/5/
 
