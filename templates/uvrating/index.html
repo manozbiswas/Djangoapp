@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %} World University Rankings {% endblock %}
+{% block title %} {% if university %}{{ university }} {% endif %}World University Rankings {% endblock %}
 
 {% block content %}
 {{ dir }}

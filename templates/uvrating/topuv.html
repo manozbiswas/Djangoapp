@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %} Top 10 University Rankings {% endblock %}
+{% block title %} Top {{ numberOfUv }} University Rankings by {{ rankingSystem }}{% endblock %}
 
 {% block content %}
 {{ dir }}
@@ -8,29 +8,6 @@
     {% csrf_token %}
     <div class="col-md-6">
         <div class="form-group">
-            <label for="university-name">Select A Ranking System</label>
-            <select id="university-name" name="rankingSystem" class="form-control">
-                <option value="">Select a Ranking System</option>
-                <option value="Times Ranking Data">Times Higher Education World University Ranking</option>
-                <option value="Shanghai Ranking">Shanghai Ranking</option>
-                <option value="Center for World University Rankings">Center for World University Rankings</option>
-            </select>
-            <div style="color:red">{% firstof message message %}</div>
-        </div>
-        <div class="form-group">
-            <label for="total-uv">Number of Universities to show </label>
-            <select id="total-uv" name="numberOfUv" class="form-control">
-                <option value="">Select Number of Universities</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">9</option>
-                <option value="8">10</option>
-            </select>
             <div style="color:red">
                 {% if error %}
                 <p style="color: red;">Please select the correct input.</p>
@@ -38,8 +15,40 @@
             </div>
         </div>
         <div class="form-group">
-            <label for="university-name"></label>
-            <button style="margin-top:25px;" type="submit" class="btn btn-primary btn-default">Submit</button>
+            <label for="university-name">Select A Ranking System <span style="color:red">*</span> </label>
+            <select id="university-name" name="rankingSystem" class="form-control">
+                <option value="">Select a Ranking System</option>
+                {% for v in lists %}
+                {% if rankingSystem == v %}
+                <option value="{{ v }}" selected> {{ v }}</option>
+                {% else %}
+                <option value="{{ v }}"> {{ v }}</option>
+                {% endif %}
+                {% endfor %}
+            </select>
+            <div style="color:red">{% firstof message message %}</div>
+        </div>
+        <div class="form-group">
+            <label for="total-uv">Number of Universities to show <span style="color:red">*</span></label>
+            <select id="total-uv" name="numberOfUv" class="form-control">
+                <option value="">Select Number of Universities</option>
+                {% for l in listOfNumber %}
+
+                {% ifequal numberOfUv|add:"0" l|add:"0"%}
+                <option value="{{ l }}" selected>{{ l }}</option>
+                {% else %}
+                <option value="{{ l }}">{{ l }}</option>
+                {% endifequal %}
+                {% endfor %}
+            </select>
+
+        </div>
+        <div class="form-group">
+            <span style="color:red">*</span> Required Input
+        </div>
+        <div class="form-group">
+
+            <button style="margin-top:2px;" type="submit" class="btn btn-primary btn-default">Submit</button>
         </div>
     </div>
     <div class="col-md-6">

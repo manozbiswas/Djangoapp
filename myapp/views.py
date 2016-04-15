@@ -144,71 +144,74 @@ def process_graph(university):
 def show_top_uv(request):
     # uvlist = {'uvlist': sorted(get_uv_list())}
     # org_list = {'orglist':check_output(["ls", "resources/data"]).decode("utf8")}
-    return render(request, 'uvrating/topuv.html')
+    lists = {
+        'Times Higher Education World University Ranking': 'Times Higher Education World University Ranking',
+        'Shanghai Ranking': 'Shanghai Ranking',
+        'Center for World University Rankings': 'Center for World University Rankings'
+    }
+    listOfNumber = [x for x in range(1, 11)]
+    return render(request, 'uvrating/topuv.html', {'lists': lists, 'listOfNumber': listOfNumber})
 
 
 def get_top_uv_form_data(request):
+    rank_lists = {
+        'Times Higher Education World University Ranking': 'Times Higher Education World University Ranking',
+        'Shanghai Ranking': 'Shanghai Ranking',
+        'Center for World University Rankings': 'Center for World University Rankings'
+    }
+    listOfNumber = [x for x in range(1, 11)]
+
     if request.method == 'POST':
         if request.POST.get('rankingSystem') and request.POST.get('numberOfUv'):
             if request.POST.get('rankingSystem') != '' and request.POST.get('numberOfUv') != '':
                 rankingSystem = request.POST.get('rankingSystem')
                 numberOfUv = request.POST.get('numberOfUv')
-                # process_graph function is called
                 process_top_uv_graph(rankingSystem, numberOfUv)
-            return render(request, 'uvrating/topuv.html', {'formpopulated': True})
-        return render(request, 'uvrating/topuv.html', {'error': True,})
-    return render(request, 'uvrating/topuv.html', {'formpopulated': False,'error': True,})
+            return render(request, 'uvrating/topuv.html',
+                          {'listOfNumber': listOfNumber, 'formpopulated': True, 'rankingSystem': rankingSystem,
+                           'numberOfUv': numberOfUv, 'lists': rank_lists})
+        return render(request, 'uvrating/topuv.html',
+                      {'error': True, 'lists': rank_lists, 'listOfNumber': listOfNumber,})
+    return render(request, 'uvrating/topuv.html', {'formpopulated': False, 'error': True, 'lists': rank_lists})
 
 
 def process_top_uv_graph(rankingSystem, numberOfUv):
     sns.set(style="white", color_codes=True)
+
     # % matplotlib inline
     pylab.rcParams['figure.figsize'] = 16, 12
     plot_data = ''
     numberOfUv = int(numberOfUv)
-    if rankingSystem == 'Times Ranking Data':
+    if rankingSystem == 'Times Higher Education World University Ranking':
         timesData = Data.get_time_data()
 
         schools_to_show = timesData.university_name[:numberOfUv]
         plot_data = timesData[timesData.university_name.isin(schools_to_show)]
-        plot_data['world_rank'] = plot_data['world_rank'].astype(int)
-        ax = sns.pointplot(x='year', y='world_rank', hue='university_name', data=plot_data);
-
-        pylab.savefig('resources/images/topuv.png')
-        pylab.cla()
-        pylab.clf()
-        pylab.close()
+        hue = "university_name"
+        draw_graph(plot_data, rankingSystem, numberOfUv, hue)
     elif rankingSystem == 'Shanghai Ranking':
         shanghaiData = Data.get_shanghai_data()
         schools_to_show = shanghaiData.university_name[:numberOfUv]
         plot_data = shanghaiData[shanghaiData.university_name.isin(schools_to_show)]
-        plot_data['world_rank'] = plot_data['world_rank'].astype(int)
-        ax = sns.pointplot(x='year', y='world_rank', hue='university_name', data=plot_data);
-
-        pylab.savefig('resources/images/topuv.png')
-        pylab.cla()
-        pylab.clf()
-        pylab.close()
+        hue = "university_name"
+        draw_graph(plot_data, rankingSystem, numberOfUv, hue)
     elif rankingSystem == 'Center for World University Rankings':
         cwurData = Data.get_cwur_data()
         schools_to_show = cwurData.institution[:numberOfUv]
         plot_data = cwurData[cwurData.institution.isin(schools_to_show)]
-        plot_data['world_rank'] = plot_data['world_rank'].astype(int)
-        ax = sns.pointplot(x='year', y='world_rank', hue='institution', data=plot_data);
+        hue = "institution"
+        draw_graph(plot_data, rankingSystem, numberOfUv, hue)
 
-        pylab.savefig('resources/images/topuv.png')
-        pylab.cla()
-        pylab.clf()
-        pylab.close()
-        # else:
-        #     timesData = Data.get_time_data()
-        #     schools_to_show = timesData.university_name[:10]
-        #     plot_data = timesData[timesData.school_name.isin(schools_to_show)]
 
-        # plot_data['world_rank'] = plot_data['world_rank'].astype(int)
-        # ax = sns.pointplot(x='year', y='world_rank', hue='university_name', data=plot_data);
-        #
-        # pylab.savefig('resources/images/topuv.png')
-        # pylab.cla()
-        # pylab.clf()
-        # pylab.close()
+def draw_graph(plot_data, rankingSystem, numberOfUv, hue):
+    plot_data['world_rank'] = plot_data['world_rank'].astype(int)
+    ax = sns.pointplot(x='year', y='world_rank', hue=hue, data=plot_data);
+    pylab.title("Top " + str(numberOfUv) + " university by " + rankingSystem, fontsize=26)
+    pylab.xticks(fontsize=20)
+    pylab.yticks(fontsize=20)
+    pylab.ylabel("World Rank", fontsize=26)
+    pylab.xlabel("Year", fontsize=26)
+    pylab.savefig('resources/images/topuv.png')
+    pylab.cla()
+    pylab.clf()
+    pylab.close()
