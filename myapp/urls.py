@@ -7,6 +7,8 @@ urlpatterns = [
     # ex: /polls/
     url(r'^$', views.show_university_list, name='index'),
     # url(r'^details$', views.details, name='details'),
+    url(r'^topuv', views.show_top_uv, name='Top university'),
+    url(r'^processtopuvform', views.get_top_uv_form_data, name='Top university'),
     url(r'^processdata', views.process_form_data, name='Form'),
     # url(r'^import', views.show_university_list, name='Import'),
     # ex: /polls/5/

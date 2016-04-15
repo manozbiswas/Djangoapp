@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %} Top 10 University Rankings {% endblock %}
+
+{% block content %}
+{{ dir }}
+<form name="uvlist" class=" " role="search" action="/mysite/processtopuvform" method="post">
+    {% csrf_token %}
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="university-name">Select A Ranking System</label>
+            <select id="university-name" name="rankingSystem" class="form-control">
+                <option value="">Select a Ranking System</option>
+                <option value="Times Ranking Data">Times Higher Education World University Ranking</option>
+                <option value="Shanghai Ranking">Shanghai Ranking</option>
+                <option value="Center for World University Rankings">Center for World University Rankings</option>
+            </select>
+            <div style="color:red">{% firstof message message %}</div>
+        </div>
+        <div class="form-group">
+            <label for="total-uv">Number of Universities to show </label>
+            <select id="total-uv" name="numberOfUv" class="form-control">
+                <option value="">Select Number of Universities</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">9</option>
+                <option value="8">10</option>
+            </select>
+            <div style="color:red">
+                {% if error %}
+                <p style="color: red;">Please select the correct input.</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="university-name"></label>
+            <button style="margin-top:25px;" type="submit" class="btn btn-primary btn-default">Submit</button>
+        </div>
+    </div>
+    <div class="col-md-6">
+
+    </div>
+</form>
+{%if formpopulated %}
+{% load staticfiles %}
+<!--<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}"/>-->
+<div class="col-md-12">
+    <img class="img-responsive" src="{% static 'images/topuv.png' %}" alt="My image"/>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block footer %}
+
+{% endblock %}
