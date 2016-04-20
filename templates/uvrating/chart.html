@@ -8,6 +8,7 @@
     {% csrf_token %}
     <div class="col-md-6">
         <div class="form-group">
+            <span>Reputation of each univesity is shown from The Times Higher Education World University Ranking Dataset</span>
                 {% if error %}
                 <p style="color: red;">Please select the correct input.</p>
                 {% endif %}
@@ -41,7 +42,7 @@
 {% load staticfiles %}
 <!--<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}"/>-->
 <div class="col-md-12">
-    <img class="img-responsive" src="{% static 'images/radar-chart.png' %}" alt="My image"/>
+    <img class="img-responsive" src="{% static 'images/chart.png' %}" alt="My image"/>
 </div>
 {% endif %}
 

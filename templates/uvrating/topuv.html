@@ -4,7 +4,8 @@
 
 {% block content %}
 {{ dir }}
-<form name="uvlist" class=" " role="search" action="/mysite/processtopuvform" method="post">
+<form name="uvlist" class=" " role="search" action="/mysite/processtopuvform" method="post"
+      xmlns="http://www.w3.org/1999/html">
     {% csrf_token %}
     <div class="col-md-6">
         <div class="form-group">
@@ -15,6 +16,7 @@
             </div>
         </div>
         <div class="form-group">
+            <label> Here you can see the top universities  </label></br>
             <label for="university-name">Select A Ranking System <span style="color:red">*</span> </label>
             <select id="university-name" name="rankingSystem" class="form-control">
                 <option value="">Select a Ranking System</option>

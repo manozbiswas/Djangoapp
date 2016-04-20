@@ -37,16 +37,26 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <a class="navbar-brand" href="/import"></a>
+                        <a class="navbar-brand" href="/mysite"></a>
                     </div>
-
-
                     <!-- Collect the nav links, forms, and other content for toggling -->
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav">
-                            <li class=""><a href="/mysite">Home</a></li>
-                            <li><a href="/mysite/topuv">Top 10 University</a></li>
-                            <li><a href="/mysite/uvreputation">University Reputation</a></li>
+                            <li class="{% if request.path == '/mysite/' or request.path == '/mysite/processdata' %}active{% endif %}">
+                                <a href="/mysite">Home</a>
+                            </li>
+                            <li class="{% if request.path == '/mysite/topuv' or request.path == '/mysite/processtopuvform' %}active{% endif %}">
+                                <a href="/mysite/topuv">Top Universities(1-10)</a>
+                            </li>
+                            <li class="{% if request.path == '/mysite/uvreputation' or request.path == '/mysite/showchart' %}active{% endif %}">
+                                <a href="/mysite/uvreputation">University Reputation</a>
+                            </li>
+                            <li class="{% if request.path == '/mysite/topmostuv' or request.path == '/mysite/processtopmostuv' %}active{% endif %}">
+                                <a href="/mysite/topmostuv">Total Ranking in 3D plate </a>
+                            </li>
+                            <li class="{% if request.path == '/mysite/uvincountry' %}active{% endif %}">
+                                <a href="/mysite/uvincountry">Total University of a Country</a>
+                            </li>
                         </ul>
                     </div><!-- /.navbar-collapse -->
                 </div><!-- /.container-fluid -->
@@ -73,5 +83,7 @@
 </div> <!-- /container -->
 
 <script src="{% static 'jquery-1.12.2.js' %}"></script>
+<script src="{% static 'custom-script.js' %}"></script>
+<script src="" charset="utf-8"></script>
 </body>
 </html>

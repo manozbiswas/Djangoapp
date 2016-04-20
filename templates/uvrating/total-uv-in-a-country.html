@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %} Total Ranking in 3D plate of University Rankings by {{ rankingSystem }}{% endblock %}
+
+{% block content %}
+{%if correctUrl %}
+{% load staticfiles %}
+<!--<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}"/>-->
+<div class="col-md-12">
+    <h3 style="text-align:center">Total number of university of a country</h3><br/>
+   <iframe src="{% static 'images/uvincountry.html' %}" width="1000" height="800"></iframe>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block footer %}
+
+{% endblock %}
+

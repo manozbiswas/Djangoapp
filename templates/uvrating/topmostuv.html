@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %} Total Ranking in 3D plate of University Rankings by {{ rankingSystem }}{% endblock %}
+
+{% block content %}
+<form name="uvlist" class=" " role="search" action="/mysite/processtopmostuv" method="post"
+      xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+    {% csrf_token %}
+    <div class="col-md-6">
+        <div class="form-group">
+            <div style="color:red">
+                {% if error %}
+                <p style="color: red;">Please select the correct input.</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Ranking in 3D plate </label></br>
+            <label for="university-name">Select A Ranking System <span style="color:red">*</span> </label>
+            <select id="university-name" name="rankingSystem" class="form-control">
+                <option value="">Select a Ranking System</option>
+                {% for v in lists %}
+                {% if rankingSystem == v %}
+                <option value="{{ v }}" selected> {{ v }}</option>
+                {% else %}
+                <option value="{{ v }}"> {{ v }}</option>
+                {% endif %}
+                {% endfor %}
+            </select>
+            <div style="color:red">{% firstof message message %}</div>
+        </div>
+        <div class="form-group">
+            <span style="color:red">*</span> Required Input
+        </div>
+        <div class="form-group">
+
+            <button style="margin-top:2px;" type="submit" class="btn btn-primary btn-default">Submit</button>
+        </div>
+    </div>
+    <div class="col-md-6">
+
+    </div>
+</form>
+{%if formpopulated %}
+{% load staticfiles %}
+<!--<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}"/>-->
+<div class="col-md-12">
+   <iframe src="{% static 'images/topmostuv.html' %}" width="1200" height="800"></iframe>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block footer %}
+
+{% endblock %}
+

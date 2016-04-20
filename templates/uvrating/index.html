@@ -8,7 +8,7 @@
     {% csrf_token %}
     <div class="col-md-6">
         <div class="form-group">
-            <label for="university-name">Select University</label>
+            <label for="university-name">Select a University to see its rank</label>
             <select id="university-name" name="universityName" class="form-control">
                 <option value="">Select University Name</option>
                 {% for u in uvlist %}

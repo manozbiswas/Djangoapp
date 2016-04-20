@@ -12,6 +12,9 @@ urlpatterns = [
     url(r'^processdata', views.process_form_data, name='Form'),
     url(r'^showchart', views.show_chart, name='Chart'),
     url(r'^uvreputation', views.show_chart_form, name='Chart form'),
+    url(r'^topmostuv', views.show_topmost_uv, name='Bubble form'),
+    url(r'^processtopmostuv', views.process_topmost_uv_form, name='Bubble form'),
+    url(r'^uvincountry', views.display_university_by_country, name='Uv in country'),
     # url(r'^import', views.show_university_list, name='Import'),
     # ex: /polls/5/
 
